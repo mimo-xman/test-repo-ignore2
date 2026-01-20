@@ -1,4 +1,4 @@
-name: Test Gen (tempmailio)
+name: Test Gen
 
 on:
   # push:
@@ -14,6 +14,31 @@ on:
       description: 'Max Retries'
       required: true
       default: '10'
+    email_service_name:
+      description: 'Email Service Name'
+      required: true
+      default: 'EmailOnDeck'
+      enum:
+        - EmailOnDeck
+        - SmailPro
+        - TempMailIO
+        - TempMailOrg
+        - TMailor
+    use_to_in_browser:
+      description: 'Use TOR in browser'
+      required: true
+      default: 'true'
+      enum:
+        - 'true'
+        - 'false'
+    use_to_in_mailservice:
+      description: 'Use TOR in mail service'
+      required: true
+      default: 'true'
+      enum:
+        - 'true'
+        - 'false'
+
 
 permissions:
   contents: read
@@ -89,11 +114,14 @@ jobs:
           MAX_RETRIES_FOR_GENERATE_ACCOUNT: ${{ github.event.inputs.max_retries || 10 }}
           ASK_BEFORE_CLOSE_BROWSER: false
           HEADLESS: true
+          EMAIL_SERVICE_NAME: ${{ github.event.inputs.email_service_name || "EmailOnDeck" }}
+          USE_TOR_IN_BROWSER: ${{ github.event.inputs.use_to_in_browser || "true" }}
+          USE_TOR_IN_MAILSERVICE: ${{ github.event.inputs.use_to_in_mailservice || "true" }}
           CHROME_PATH: "/usr/bin/google-chrome"
           PYTHONUNBUFFERED: "1"
         run: |
           # Run with xvfb just in case, though we patched HEADLESS=True
-          xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" python app-using-tempmailio.pyz
+          xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" python app.pyz
       
       - name: Upload Artifacts
         if: always()
@@ -119,4 +147,7 @@ jobs:
           gh workflow run test-gen.yml \
             --ref ${{ github.ref_name }} \
             -f creator_name="${BASE_NAME} - Instance ${{ github.run_number }}" \
-            -f max_retries="${{ github.event.inputs.max_retries || 10 }}"
+            -f max_retries="${{ github.event.inputs.max_retries || 10 }}" \
+            -f email_service_name="${{ github.event.inputs.email_service_name || "EmailOnDeck" }}"
+            -f use_to_in_browser="${{ github.event.inputs.use_to_in_browser || "true" }}"
+            -f use_to_in_mailservice="${{ github.event.inputs.use_to_in_mailservice || "true" }}"
