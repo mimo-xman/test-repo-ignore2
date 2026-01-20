@@ -94,6 +94,7 @@ jobs:
           TOR_PORT: 9150
           TOR_CONTROL_PORT: 9151
           MAX_RETRIES_FOR_GENERATE_ACCOUNT: ${{ github.event.inputs.max_retries || 10 }}
+          ASK_BEFORE_CLOSE_BROWSER: false
           CHROME_PATH: "/usr/bin/google-chrome"
           PYTHONUNBUFFERED: "1"
         run: |
