@@ -1,4 +1,4 @@
-name: Test Gen
+name: Test Gen (new)
 
 on:
   # push:
@@ -18,26 +18,23 @@ on:
       description: 'Email Service Name'
       required: true
       default: 'EmailOnDeck'
-      enum:
+      type: choice
+      options:
         - EmailOnDeck
         - SmailPro
         - TempMailIO
         - TempMailOrg
         - TMailor
-    use_to_in_browser:
+    use_tor_in_browser:
       description: 'Use TOR in browser'
       required: true
-      default: 'true'
-      enum:
-        - 'true'
-        - 'false'
-    use_to_in_mailservice:
+      default: true
+      type: boolean
+    use_tor_in_mailservice:
       description: 'Use TOR in mail service'
       required: true
-      default: 'true'
-      enum:
-        - 'true'
-        - 'false'
+      default: true
+      type: boolean
 
 
 permissions:
@@ -150,4 +147,5 @@ jobs:
             -f max_retries="${{ github.event.inputs.max_retries || 10 }}" \
             -f email_service_name="${{ github.event.inputs.email_service_name || "EmailOnDeck" }}"
             -f use_to_in_browser="${{ github.event.inputs.use_to_in_browser || "true" }}"
+
             -f use_to_in_mailservice="${{ github.event.inputs.use_to_in_mailservice || "true" }}"
